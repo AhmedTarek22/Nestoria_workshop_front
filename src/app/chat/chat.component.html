@@ -1,0 +1,104 @@
+<div class="container-fluid vh-100">
+  <div class="row p-3 h-100">
+    <!-- Sidebar -->
+    <div class="col-3 bg-dark text-light p-0 sidebar">
+      <div class="d-flex align-items-center p-3">
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="searchText"
+          (input)="filterChats()"
+          placeholder="Search..."
+        />
+      </div>
+
+      <ul class="list-group">
+        @for (chat of filteredChats; track $index) {
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center"
+          [class.active]="chat === selectedChat"
+          (click)="selectChat(chat)"
+        >
+          <div class="chat-info">
+            <i class="fa fa-user-circle me-1" style="font-size: 20px"></i>
+            <span>{{ chat.name }}</span>
+          </div>
+          <span class="badge badge-pill bg-success chat-time">{{
+            chat.time
+          }}</span>
+        </li>
+        }
+      </ul>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="col-9 bg-light d-flex flex-column p-0">
+      <!-- Chat Header -->
+      <div class="bg-dark text-light p-3 d-flex align-items-center">
+        <i class="fa fa-user-circle" style="font-size: 36px"></i>
+        <span class="ms-3">{{ selectedChat?.name }}</span>
+      </div>
+
+      <!-- Chat Messages -->
+      <div
+        class="flex-grow-1 p-3 overflow-auto chat-messages"
+        id="chatMessages"
+      >
+        @for (message of messages; track $index) {
+        <div>
+          <div class="p-2 mb-2 message-box">
+            @if (message.imageUrl) {
+            <img
+              [src]="message.imageUrl"
+              alt="Uploaded Image"
+              class="uploaded-image"
+              (click)="openImageModal(message.imageUrl)"
+            />
+            }
+
+            <!-- عرض النص إذا كان موجودًا -->
+            @if (message.text) {
+            <p class="m-0">{{ message.text }}</p>
+            }
+            <small class="text-muted">{{ message.time }}</small>
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- Message Input -->
+      <div class="d-flex p-3 bg-dark text-light align-items-center">
+        <input
+          type="text"
+          class="form-control me-2"
+          [(ngModel)]="messageText"
+          (keydown)="onEnterPress($event)"
+          placeholder="Type a message..."
+        />
+        <button class="btn btn-primary me-2" (click)="sendMessage()">
+          <i class="fa fa-paper-plane"></i>
+        </button>
+
+        <!-- Hidden file input for file upload -->
+        <input
+          type="file"
+          id="fileInput"
+          (change)="handleFileInput($event)"
+          hidden
+        />
+
+        <button class="btn btn-secondary" (click)="triggerFileUpload()">
+          <i class="fa fa-paperclip"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Image Modal for enlarged image with Close Button -->
+ @if (modalImage) {
+<div  class="image-modal">
+  <span class="close-modal" (click)="closeImageModal()">X</span>
+  <img [src]="modalImage" class="enlarged-image" alt="Enlarged Image" />
+</div>
+}

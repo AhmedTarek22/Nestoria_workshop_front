@@ -1,0 +1,190 @@
+<div class="dashboard-content bgColor m-4 p-3 text-light">
+  <h3>Today's Sales</h3>
+  <p>Sales Summary</p>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card text-white bg-dark mb-3">
+        <div class="card-body">
+          <h4><i class="fa fa-bar-chart color1"></i></h4>
+          <h5 class="card-title">$5k</h5>
+          <p class="card-text">Total Sales</p>
+          <small class="color1">+10% from yesterday</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-dark mb-3">
+        <div class="card-body">
+          <h4><i class="fa fa-bar-chart color1"></i></h4>
+          <h5 class="card-title">500</h5>
+          <p class="card-text">Total Order</p>
+          <small class="color2">+8% from yesterday</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-dark mb-3">
+        <div class="card-body">
+          <h4><i class="fa fa-bar-chart color3"></i></h4>
+          <h5 class="card-title">9</h5>
+          <p class="card-text">Product Sold</p>
+          <small class="color3">+2% from yesterday</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-dark mb-3">
+        <div class="card-body">
+          <h4><i class="fa fa-bar-chart color4"></i></h4>
+          <h5 class="card-title">12</h5>
+          <p class="card-text">New Customer</p>
+          <small class="color4">+3% from yesterday</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start section tow -->
+<div class="container mt-4">
+  <div class="row">
+    <!-- عمود الرسم البياني -->
+    <div class="col-md-5 bgColor ">
+      <h3 class="text-white mb-4"><i class="fa fa-bar-chart"></i> Level</h3>
+      <canvas
+        baseChart
+        [data]="barChartData"
+        [options]="barChartOptions"
+        [type]="barChartType"
+      >
+      </canvas>
+    </div>
+    <!-- عمود المنتجات -->
+    <div class="col-md-6 offset-md-1 bgColor p-0">
+      <h3 class="text-white mb-4"><i class="fa fa-list"></i> Top Products</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="update-table">#</th>
+            <th class="update-table">Name</th>
+            <th class="update-table">Popularity</th>
+            <th class="update-table">Sales</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (product of products; track $index) {
+          <tr>
+            <td class="update-table">{{ $index + 1 }}</td>
+            <td class="update-table">{{ product.name }}</td>
+            <td class="update-table">
+              <!-- شريط التقدم -->
+              <div class="progress-bar-container">
+                <div
+                  class="progress-bar"
+                  [ngStyle]="{
+                    'background-color': product.color,
+                    width: product.popularity + '%'
+                  }"
+                ></div>
+              </div>
+            </td>
+            <td class="badge" [ngStyle]="{ 'background-color': product.color }">
+              {{ product.popularity }}%
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- end section tow -->
+<!-- start section three -->
+
+      <app-bar-chart></app-bar-chart>
+    
+
+<!-- end section three -->
+
+<!-- start section five -->
+<div class="containrt">
+  <div class="row">
+    <div class="mt-4">
+      <h2 class="text-white">Customers</h2>
+      <!-- Table for displaying customers -->
+      <table class="table table-dark  ">
+        <thead>
+          <tr class="col-md-12">
+            <th></th>
+            <th>Name</th>
+            <!-- <th>Email</th> -->
+            <th>Phone</th>
+            <th>Billing Address</th>
+            <th>Total Spent</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Iterate over visible customers -->
+          @for (customer of visibleCustomers(); track $index) {
+          <tr class="col-md-2">
+            <!-- Placeholder for profile icon -->
+            <td>
+              <span
+                class="badge2 rounded-circle"
+                [ngStyle]="{ 'background-color': getColor(customer.name) }"
+                >{{ customer.name.charAt(0) }}</span
+              >
+            </td>
+            <td>{{ customer.name }}</td>
+            <!-- <td  style="max-width: 130px;">{{ customer.email }}</td> -->
+            <td>{{ customer.phone }}</td>
+            <td>{{ customer.address }}</td>
+            <td style="max-width: 80px;">${{ customer.totalSpent.toFixed(2) }}</td>
+            <td>
+              <!-- Action buttons with FontAwesome icons -->
+              <button class="btn btn-sm text-primary m-1">
+                <i class="fa fa-pencil"></i>
+              </button>
+              <button class="btn btn-sm text-danger">
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+
+      <!-- Pagination section -->
+      <nav aria-label="Customer pagination">
+        <ul class="pagination justify-content-center">
+          <!-- Previous button -->
+          <li class="page-item" [class.disabled]="currentPage() === 1">
+            <button class="page-link" (click)="changePage(currentPage() - 1)">
+              Previous
+            </button>
+          </li>
+
+          <!-- Display page numbers dynamically based on total pages -->
+          @for (page of getPagesArray(); track $index) {
+
+          <li class="page-item" [class.active]="page === currentPage()">
+            <button class="page-link" (click)="changePage(page)">
+              {{ page }}
+            </button>
+          </li>
+          }
+          <!-- Next button -->
+          <li
+            class="page-item"
+            [class.disabled]="currentPage() === totalPages()"
+          >
+            <button class="page-link" (click)="changePage(currentPage() + 1)">
+              Next
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

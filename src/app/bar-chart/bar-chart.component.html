@@ -1,0 +1,59 @@
+<!-- <div class="chart-container">
+  <canvas
+    baseChart
+    [data]="barChartData"
+    [options]="barChartOptions"
+    [type]="barChartType"
+  ></canvas>
+</div> -->
+
+<div class="container m-3 bgColor p-3">
+  <div class="row">
+    <div class="col-md-4">
+      <canvas
+        baseChart
+        [data]="lineChartData"
+        [options]="lineChartOptions"
+        [type]="lineChartType"
+        (mouseleave)="hideCustomTooltip()"
+        style="height: 100%"
+      ></canvas>
+
+      <!-- عنصر الـ tooltip المخصص -->
+      <div
+        id="customTooltip"
+        style="
+          position: absolute;
+          background-color: white;
+          padding: 8px;
+          border-radius: 4px;
+          box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+          display: none;
+        "
+      ></div>
+    </div>
+    <div class="col-md-8">
+      <canvas
+        baseChart
+        [data]="lineChartData"
+        [options]="lineChartOptions"
+        [type]="lineChartType"
+        (mouseleave)="hideCustomTooltip()"
+        style="height: 100%"
+      ></canvas>
+
+      <!-- عنصر الـ tooltip المخصص -->
+      <div
+        id="customTooltip"
+        style="
+          position: absolute;
+          background-color: white;
+          padding: 8px;
+          border-radius: 4px;
+          box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+          display: none;
+        "
+      ></div>
+    </div>
+  </div>
+</div>

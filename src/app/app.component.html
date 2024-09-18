@@ -1,0 +1,17 @@
+<div class="container-fluid color-body">
+  <div class="row">
+    <div class="col-md-1">
+      <div class="row">
+        @if(isSidebarVisible){
+        <app-sidebar></app-sidebar>
+
+        }
+      </div>
+    </div>
+    <div class="col-md-10">
+      <app-navbar></app-navbar>
+      <app-layout></app-layout>
+    </div>
+  </div>
+</div>
+<app-pagenotfound></app-pagenotfound>

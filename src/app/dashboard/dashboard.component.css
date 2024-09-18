@@ -1,0 +1,98 @@
+
+     .bgColor{
+       background-color: #21222d;
+     }
+    .card {
+      background-color: #171821;
+      border: none;
+      /* box-shadow: 5px  #171821 ; */
+    }
+.color1{
+color: rgb(252, 184, 89);
+}
+.color2{
+  color: rgb(169, 223, 216);
+}
+.color3{
+  color: rgb(242, 200, 237);
+}
+.color4{
+  color: rgb(32, 174, 243);
+}
+
+/* section toe */
+    h3 {
+  font-size: 1.5rem;
+}
+.update-table {
+  background-color: transparent!important;
+  color: white;
+  border-bottom: none;
+}
+.list-group-item {
+  border: none;
+  margin-bottom: 10px;
+}
+
+.badge {
+  padding: 10px;
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+.progress-bar-container {
+  width: 100px; /* يمكنك تعديل العرض ليتناسب مع التصميم */
+  height: 6px; /* سمك شريط التقدم */
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  border-radius: 3px;
+}
+
+
+.badge:hover {
+  filter: brightness(1.1); /* تأثير التفتيح عند التحريك */
+}
+
+
+
+
+/* three */
+
+
+#customTooltip {
+  transition: all 0.2s ease-in-out;
+  pointer-events: none; /* لمنع تفاعل المؤشر مع الـ tooltip */
+}
+/* five */
+.badge2 {
+  font-size: 16px;
+  color: white;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+td {
+  vertical-align: middle;
+}
+
+.page-link {
+  color: black; 
+}
+.pagination-color {
+background-color: black!important;
+}
+
+.page-item.active .page-link {
+  background-color: #00aaff;
+  border-color: #00aaff;
+}
+

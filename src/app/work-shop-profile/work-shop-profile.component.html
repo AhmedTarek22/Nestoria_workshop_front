@@ -1,0 +1,218 @@
+<div class="container mt-5 text-white">
+  <!-- Workshop Details Display -->
+  <div *ngIf="!editMode" class="card bg-custom p-4 shadow">
+    <div class="row align-items-center">
+      <div class="col-md-4 text-center">
+        <img
+          [src]="workshop.image || 'assets/default-avatar.png'"
+          [alt]="workshop.image ? 'Instructor Image' : 'Default Avatar'"
+          class="rounded-circle shadow avatar-img"
+        />
+      </div>
+      <div class="col-md-8 text-white">
+        <h2 class="display-6 text-highlight mb-4">{{ workshop.title }}</h2>
+        <p><strong>Date:</strong> {{ workshop.date | date:'mediumDate' }}</p>
+        <p><strong>Time:</strong> {{ workshop.time }}</p>
+        <p><strong>Location:</strong> {{ workshop.location }}</p>
+        <p><strong>Instructor:</strong> {{ workshop.instructor }}</p>
+        <p><strong>Capacity:</strong> {{ workshop.capacity }}</p>
+        <p><strong>Registrations:</strong> {{ workshop.registrations }}/{{ workshop.capacity }}</p>
+        <p><strong>Description:</strong> {{ workshop.description }}</p>
+      </div>
+    </div>
+    <button class="btn btn-outline-light btn-lg px-4 mt-3" (click)="toggleEditMode()">Edit</button>
+  </div>
+
+  <!-- Workshop Edit Form -->
+  <div *ngIf="editMode" class="card bg-custom p-4 shadow-lg">
+    <form (ngSubmit)="saveWorkshop()" #workshopForm="ngForm">
+      <div class="row">
+        <div class="col-md-4 text-center mb-3">
+          <img
+            [src]="workshop.image || 'assets/default-avatar.png'"
+            [alt]="workshop.image ? 'Instructor Image' : 'Default Avatar'"
+            class="rounded-circle shadow avatar-img"
+          />
+          <input
+            type="file"
+            class="form-control mt-3 bg-input"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+          />
+        </div>
+        <div class="col-md-8">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="title" class="form-label text-highlight">Title</label>
+              <input
+                id="title"
+                type="text"
+                name="title"
+                [(ngModel)]="workshop.title"
+                #title="ngModel"
+                required
+                minlength="5"
+                maxlength="100"
+                class="form-control form-control-lg bg-input"
+                [class.is-invalid]="title.invalid && (title.dirty || title.touched)"
+              />
+              <div *ngIf="title.invalid && (title.dirty || title.touched)" class="invalid-feedback">
+                <div *ngIf="title.errors?.['required']">Title is required.</div>
+                <div *ngIf="title.errors?.['minlength']">Title must be at least 5 characters long.</div>
+                <div *ngIf="title.errors?.['maxlength']">Title cannot exceed 100 characters.</div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="date" class="form-label text-highlight">Date</label>
+              <input
+                id="date"
+                type="date"
+                name="date"
+                [(ngModel)]="workshop.date"
+                #date="ngModel"
+                required
+                class="form-control form-control-lg bg-input"
+                [class.is-invalid]="date.invalid && (date.dirty || date.touched)"
+              />
+              <div *ngIf="date.invalid && (date.dirty || date.touched)" class="invalid-feedback">
+                <div *ngIf="date.errors?.['required']">Date is required.</div>
+                <div *ngIf="date.errors?.['min']">Date must be in the future.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="time" class="form-label text-highlight">Time</label>
+              <input
+                id="time"
+                type="time"
+                name="time"
+                [(ngModel)]="workshop.time"
+                #time="ngModel"
+                required
+                class="form-control form-control-lg bg-input"
+                [class.is-invalid]="time.invalid && (time.dirty || time.touched)"
+              />
+              <div *ngIf="time.invalid && (time.dirty || time.touched)" class="invalid-feedback">
+                <div *ngIf="time.errors?.['required']">Time is required.</div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="location" class="form-label text-highlight">Location</label>
+              <input
+                id="location"
+                type="text"
+                name="location"
+                [(ngModel)]="workshop.location"
+                #location="ngModel"
+                required
+                minlength="5"
+                class="form-control form-control-lg bg-input"
+                [class.is-invalid]="location.invalid && (location.dirty || location.touched)"
+              />
+              <div *ngIf="location.invalid && (location.dirty || location.touched)" class="invalid-feedback">
+                <div *ngIf="location.errors?.['required']">Location is required.</div>
+                <div *ngIf="location.errors?.['minlength']">Location must be at least 5 characters long.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="instructor" class="form-label text-highlight">Instructor</label>
+              <input
+                id="instructor"
+                type="text"
+                name="instructor"
+                [(ngModel)]="workshop.instructor"
+                #instructor="ngModel"
+                required
+                minlength="2"
+                class="form-control form-control-lg bg-input"
+                [class.is-invalid]="instructor.invalid && (instructor.dirty || instructor.touched)"
+              />
+              <div *ngIf="instructor.invalid && (instructor.dirty || instructor.touched)" class="invalid-feedback">
+                <div *ngIf="instructor.errors?.['required']">Instructor name is required.</div>
+                <div *ngIf="instructor.errors?.['minlength']">Instructor name must be at least 2 characters long.</div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="capacity" class="form-label text-highlight">Capacity</label>
+              <input
+                id="capacity"
+                type="number"
+                name="capacity"
+                [(ngModel)]="workshop.capacity"
+                #capacity="ngModel"
+                required
+                min="1"
+                max="1000"
+                class="form-control form-control-lg bg-input"
+                [class.is-invalid]="capacity.invalid && (capacity.dirty || capacity.touched)"
+              />
+              <div *ngIf="capacity.invalid && (capacity.dirty || capacity.touched)" class="invalid-feedback">
+                <div *ngIf="capacity.errors?.['required']">Capacity is required.</div>
+                <div *ngIf="capacity.errors?.['min']">Capacity must be at least 1.</div>
+                <div *ngIf="capacity.errors?.['max']">Capacity cannot exceed 1000.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="registrations" class="form-label text-highlight">Registrations</label>
+            <input
+              id="registrations"
+              type="number"
+              name="registrations"
+              [(ngModel)]="workshop.registrations"
+              #registrations="ngModel"
+              required
+              min="0"
+              [max]="workshop.capacity"
+              class="form-control form-control-lg bg-input"
+              [class.is-invalid]="registrations.invalid && (registrations.dirty || registrations.touched)"
+            />
+            <div *ngIf="registrations.invalid && (registrations.dirty || registrations.touched)" class="invalid-feedback">
+              <div *ngIf="registrations.errors?.['required']">Number of registrations is required.</div>
+              <div *ngIf="registrations.errors?.['min']">Registrations cannot be negative.</div>
+              <div *ngIf="registrations.errors?.['max']">Registrations cannot exceed capacity.</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="description" class="form-label text-highlight">Description</label>
+            <textarea
+              id="description"
+              name="description"
+              [(ngModel)]="workshop.description"
+              #description="ngModel"
+              required
+              minlength="20"
+              maxlength="500"
+              class="form-control form-control-lg bg-input"
+              rows="3"
+              [class.is-invalid]="description.invalid && (description.dirty || description.touched)"
+            ></textarea>
+            <div *ngIf="description.invalid && (description.dirty || description.touched)" class="invalid-feedback">
+              <div *ngIf="description.errors?.['required']">Description is required.</div>
+              <div *ngIf="description.errors?.['minlength']">Description must be at least 20 characters long.</div>
+              <div *ngIf="description.errors?.['maxlength']">Description cannot exceed 500 characters.</div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn btn-outline-light btn-lg me-3 px-4"
+              (click)="toggleEditMode()"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-light btn-lg px-4" [disabled]="!workshopForm.form.valid">Save</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

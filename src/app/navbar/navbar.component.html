@@ -1,0 +1,69 @@
+<nav class="navbar navbar-expand-lg d-flex justify-content-between">
+  <i class="fas fa-bars" (click)="openNav()"></i>
+
+  <div
+    class="d-flex align-items-center flex-grow-1 justify-content-center search-container"
+  >
+    <form class="d-flex w-50">
+      <input
+        class="form-control me-2 search-input"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+      />
+    </form>
+  </div>
+
+  <div class="d-flex align-items-center notification-profile">
+    <i class="fas fa-bell m-2 fs-4 text-light"></i>
+    <div class="profile-section">
+      <img src="https://via.placeholder.com/40" alt="Profile Image" />
+      <div class="dropdown">
+        <button
+          class="btn text-light dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton1"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          User
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+          <li><a class="dropdown-item" href="#">View Profile</a></li>
+          <li><a class="dropdown-item" href="#">Settings</a></li>
+          <li>
+            <a
+              class="dropdown-item"
+              href="http://localhost:3000/login"
+              (click)="logout()"
+              >Logout</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div id="mySidebar" class="sidebar">
+  <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
+  <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+    <i class="fa fa-home"></i> Dashboard</a
+  >
+  <a routerLink="/profile" routerLinkActive="active" class="nav-link">
+    <i class="fa fa-user"></i> Profile</a
+  >
+  <a routerLink="/products" routerLinkActive="active" class="nav-link">
+    <i class="fa-solid fa-bag-shopping"></i> Products</a
+  >
+  <a routerLink="/orders" routerLinkActive="active" class="nav-link">
+    <i class="fa fa-shopping-cart"></i> Orders</a
+  >
+  <a routerLink="/chat" routerLinkActive="active" class="nav-link">
+    <i class="fa-regular fa-comment"></i> Chat</a
+  >
+</div>
+
+<div class="main-content">
+  <ng-content></ng-content>
+</div>

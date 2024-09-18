@@ -1,0 +1,34 @@
+.sidebar {
+      background-color: #1e1e2d;
+      height: 100vh;
+      padding: 1rem 0;
+      color: #fff;
+      width: 80px; /* Adjust width to fit your design */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .nav-link {
+      color: #4a4a5a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px 0;
+      font-size: 20px;
+      width: 100%;
+      height: 50px;
+      transition: color 0.3s, border-left 0.3s;
+      position: relative;
+    }
+    .active {
+      color: #00ffc3; /* Change this to match the icon color in the image */
+    }
+   .active::after {
+      content: "";
+      position: absolute;
+      right:  0;
+      top: 0;
+      height: 100%;
+      width: 5px;
+      background-color: #00ffc3; /* Vertical line to the left of the icon */
+    }

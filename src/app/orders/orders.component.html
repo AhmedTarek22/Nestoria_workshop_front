@@ -1,0 +1,118 @@
+<div class="container mt-5">
+  <h2 class="text-center text-light">Orders Management</h2>
+
+  <!-- Tabs -->
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'pending'"
+        (click)="selectTab('pending')"
+        >Pending Orders</a
+      >
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'shipped'"
+        (click)="selectTab('shipped')"
+        >Shipped Orders</a
+      >
+    </li>
+  </ul>
+
+  <!-- الطلبات غير المشحونة -->
+  @if (activeTab === 'pending') {
+  <div>
+    <h3 class="text-light m-2">Pending Orders</h3>
+    <table style="max-width: 100%" class="table table-dark table-bordered">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Customer</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (order of orders(); track $index) {
+        <tr>
+          <td>
+            <img [src]="order.imageUrl" alt="{{ order.product }}" width="50" />
+          </td>
+          <td>{{ order.product }}</td>
+          <td>{{ order.price | currency }}</td>
+          <td class="quantity-controls">
+            <span class="quantity-value">{{ order.quantity }}</span>
+          </td>
+          <td>{{ order.customerName }}</td>
+          <td>
+            <!-- زر الشحن يظهر فقط في الطلبات غير المشحونة -->
+            @if (!order.shipped) {
+            <button class="btn btn-success me-2" (click)="shipOrder(order.id)">
+              <i class="fas fa-shipping-fast"></i> Ship Order
+            </button>
+            }
+
+            <!-- زر الإرسال يظهر بعد الشحن -->
+            @if (order.shipped && !order.sent) {
+            <button class="btn btn-primary me-2" (click)="sendOrder(order.id)">
+              <i class="fas fa-paper-plane"></i> Send Order
+            </button>
+            }
+
+            <!-- زر حذف الطلب يظهر إذا لم يتم الإرسال -->
+            @if (!order.sent) {
+            <button class="btn btn-danger" (click)="deleteOrder(order.id)">
+              <i class="fas fa-trash"></i> Cancel Order
+            </button>
+            }
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+
+  <!-- الطلبات المشحونة -->
+  @if (activeTab === 'shipped') {
+  <div>
+    <h3 class="text-light m-2">Shipped Orders</h3>
+    <table class="table table-dark table-bordered">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Customer</th>
+          <th>Order Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (order of shippedOrders; track $index) {
+        <tr>
+          <td>
+            <img [src]="order.imageUrl" alt="{{ order.product }}" width="50" />
+          </td>
+          <td>{{ order.product }}</td>
+          <td>{{ order.price | currency }}</td>
+          <td>{{ order.quantity }}</td>
+          <td>{{ order.customerName }}</td>
+          <td>{{ order.orderDate | date : "short" }}</td>
+          <td>
+            <button class="btn btn-danger" (click)="cancelOrder(order.id)">
+              <i class="fas fa-times"></i> Cancel Order
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+</div>
