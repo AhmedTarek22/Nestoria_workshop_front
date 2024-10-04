@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 
 interface ApiResponse {
   msg: string;
@@ -10,12 +10,15 @@ interface ApiResponse {
 export interface Product {
   _id: string;
   name: string;
+  nameInArabic: string;
   description: string;
+  descriptionInArabic: string;
   price: number;
   images: string[];
   quantity: number;
-  color: string;
+  color: string[];
   category:string;
+
 }
 
 @Injectable({
@@ -30,21 +33,25 @@ export class ProductsService {
     return this.http.get<ApiResponse>(`${this.apiUrl}/myproducts`);
   }
 
-  // addProduct(product: Product): Observable<any> {
-  //   console.log(product)
-  //   return this.http.post(this.apiUrl, product);
-  // }
+  getWorkshopProductsNoQuantity(): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(`${this.apiUrl}/getWorkshopProductsNoQuantity`).pipe(
+      catchError((error) => {
+        // Handle the error appropriately here
+        console.error('Error fetching workshop products', error);
+        return throwError('Failed to fetch workshop products; please try again later.');
+      })
+    );
+  }
+
+
   addProduct(productData: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl}`, productData);
   }
 
-  // updateProduct(_id: string, product: Product): Observable<any> {
-  //   return this.http.patch(`${this.apiUrl}/${_id}`, product);
-  // }
+
   updateProduct(_id: string, productData: FormData): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${_id}`, productData);
   }
-  
 
   deleteProduct(_id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${_id}`);

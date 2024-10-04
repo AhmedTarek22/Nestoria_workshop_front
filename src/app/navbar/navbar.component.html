@@ -15,9 +15,40 @@
   </div>
 
   <div class="d-flex align-items-center notification-profile">
-    <i class="fas fa-bell m-2 fs-4 text-light"></i>
+    <div class="notificationsDiv">
+      <i
+        (click)="toggleNotifications()"
+        class="fas fa-bell m-2 fs-4 text-light notification-icon"
+        ><span class="countNotification">{{
+          productsNoQuantity.length
+        }}</span></i
+      >
+      <div class="notification-dropdown" *ngIf="showNotifications">
+        <div class="notification-header">
+          <span>Notifications</span>
+          <span class="notification-count">{{
+            productsNoQuantity.length
+          }}</span>
+        </div>
+        <div class="notification-list">
+          @for (product of productsNoQuantity; track $index) {
+          <hr />
+          <div class="notification-item">
+            <img [src]="product.images[0]" alt="Profile Picture" />
+            <span class="nameProductNot">{{ product.name }}</span>
+            <span class="spanQuantityNot"
+              >Qnt: {{ product.quantity }}</span
+            >
+          </div>
+          }
+        </div>
+      </div>
+    </div>
     <div class="profile-section">
-      <img src="https://via.placeholder.com/40" alt="Profile Image" />
+      <img
+        [src]="userDate?.registrationDocuments.personalPhoto"
+        alt="Profile Image"
+      />
       <div class="dropdown">
         <button
           class="btn text-light dropdown-toggle"
@@ -26,7 +57,7 @@
           data-bs-toggle="dropdown"
           aria-expanded="false"
         >
-          User
+          {{ userDate?.fullName }}
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
           <li><a class="dropdown-item" href="#">View Profile</a></li>

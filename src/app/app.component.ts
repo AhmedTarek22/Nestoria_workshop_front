@@ -5,6 +5,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { WorkshopProfileComponent } from './work-shop-profile/work-shop-profile.component';
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -15,6 +16,7 @@ import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
     SidebarComponent,
     WorkshopProfileComponent,
     PagenotfoundComponent,
+    
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',

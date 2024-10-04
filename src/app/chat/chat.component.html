@@ -1,104 +1,151 @@
-<div class="container-fluid vh-100">
-  <div class="row p-3 h-100">
-    <!-- Sidebar -->
-    <div class="col-3 bg-dark text-light p-0 sidebar">
-      <div class="d-flex align-items-center p-3">
+<div class="chatContainer container-fluid d-flex flex-column">
+  <div class="row flex-grow-1 overflow-hidden rounded">
+    <!-- Sidebar / Chat List -->
+    <div
+      class="col-12 col-md-4 col-lg-3 bg-dark-custom text-light p-0 d-flex flex-column sidebar"
+      [class.d-none]="!isSidebarVisible && isMobile()"
+    >
+      <div class="p-3 bg-header-custom">
         <input
           type="text"
           class="form-control"
           [(ngModel)]="searchText"
-          (input)="filterChats()"
           placeholder="Search..."
         />
       </div>
 
-      <ul class="list-group">
-        @for (chat of filteredChats; track $index) {
+      <!-- Chat List -->
+      @if(chats && chats.length >0){
+      <ul class="list-group flex-grow-1 overflow-auto list-group-flush">
+        @for (chat of chats; track $index) {
         <li
-          class="list-group-item d-flex justify-content-between align-items-center"
-          [class.active]="chat === selectedChat"
+          class="chat list-group-item list-group-item-action bg-dark-custom text-light border-0"
+          [class.selectedChat]="chat.id === selectedChatId"
           (click)="selectChat(chat)"
         >
-          <div class="chat-info">
-            <i class="fa fa-user-circle me-1" style="font-size: 20px"></i>
-            <span>{{ chat.name }}</span>
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <i class="fa fa-user-circle" style="font-size: 20px"></i>
+
+              <p class="badge mb-2 color-white fs-6">
+                {{ chat?.buyerName || "user" }}
+              </p>
+            </div>
+            @if(!chat.lastMessage.isRead && chat.lastMessage.sender !== sellerId
+            ){
+            <i class="fa-solid fa-lightbulb unread"></i>
+            }
           </div>
-          <span class="badge badge-pill bg-success chat-time">{{
-            chat.time
-          }}</span>
+          @if (chat.lastMessage) {
+          <p
+            class="lastMessageStyle d-flex justify-content-between line-clamp-1"
+          >
+            <span class="lastMessageSpan"> {{ chat.lastMessage.text }}</span>
+
+            <span class="badge bg-warning-custom text-black">{{
+              chat?.lastMessage.timestamp.toDate() | date : "shortTime"
+            }}</span>
+          </p>
+          }
         </li>
+
         }
       </ul>
+      }@else {
+      <p class="d-flex justify-content-center text-info mt-4">
+        There is no chats yet
+      </p>
+      }
     </div>
 
     <!-- Chat Area -->
-    <div class="col-9 bg-light d-flex flex-column p-0">
+    <div
+      class="col-12 col-md-8 col-lg-9 d-flex flex-column p-0"
+      [class.d-none]="isSidebarVisible && isMobile()"
+    >
+      <!-- Toggle Sidebar Button on Mobile -->
+
       <!-- Chat Header -->
-      <div class="bg-dark text-light p-3 d-flex align-items-center">
-        <i class="fa fa-user-circle" style="font-size: 36px"></i>
-        <span class="ms-3">{{ selectedChat?.name }}</span>
+      @if(selectBuyerChat && hasKeys(selectBuyerChat)){
+
+      <div
+        class="bg-header-custom text-light p-2 d-flex align-items-center justify-content-between"
+      >
+        <div class="d-flex align-items-center">
+          <i class="fa fa-user-circle me-2" style="font-size: 36px"></i>
+          <span class="h4">
+            {{ selectBuyerChat?.buyerName }}
+          </span>
+        </div>
+        <div
+          *ngIf="!isSidebarVisible && isMobile()"
+          class="d-md-none bg-header-custom text-light d-flex justify-content-between align-items-center"
+        >
+          <button class="btn btn-warning-custom" (click)="toggleSidebar()">
+            ☰
+          </button>
+        </div>
       </div>
+      }
 
       <!-- Chat Messages -->
-      <div
-        class="flex-grow-1 p-3 overflow-auto chat-messages"
-        id="chatMessages"
-      >
-        @for (message of messages; track $index) {
+      <div class="flex-grow-1 p-3 overflow-auto chat-messages" #containerRef>
+        @for (message of messages; track message.id) {
         <div>
-          <div class="p-2 mb-2 message-box">
-            @if (message.imageUrl) {
-            <img
-              [src]="message.imageUrl"
-              alt="Uploaded Image"
-              class="uploaded-image"
-              (click)="openImageModal(message.imageUrl)"
-            />
-            }
-
-            <!-- عرض النص إذا كان موجودًا -->
-            @if (message.text) {
-            <p class="m-0">{{ message.text }}</p>
-            }
-            <small class="text-muted">{{ message.time }}</small>
+          <div class="mb-2">
+            <!-- sender -->
+            <div
+              *ngIf="message.senderId === sellerId"
+              class="w-100 d-flex justify-content-end"
+            >
+              <div
+                class="senderMessageItem senderMessage text-end rounded shadow-sm bg-white text-black d-flex flex-column mb-2 color-black ms-2 w-fit"
+              >
+                <p class="m-2 fs-6 color-black">{{ message.content }}</p>
+                <small class="text-muted me-2 text-black">
+                  {{ message.timestamp.toDate() | date : "shortTime" }}
+                </small>
+              </div>
+            </div>
+            <!-- receiver -->
+            <div
+              *ngIf="message.senderId !== sellerId"
+              class="w-100 d-flex justify-content-start"
+            >
+              <div
+                class="receiverMessageItem receiverMessage rounded shadow-sm bg-otherone text-black d-flex flex-column mb-2 color-black"
+              >
+                <img [src]="message?.imageUrl" alt="" />
+                <p class="m-2 fs-6 color-black">{{ message.content }}</p>
+                <small class="text-muted ms-2 me-2">{{
+                  message.timestamp.toDate() | date : "shortTime"
+                }}</small>
+              </div>
+            </div>
           </div>
         </div>
         }
       </div>
 
       <!-- Message Input -->
-      <div class="d-flex p-3 bg-dark text-light align-items-center">
+      @if (selectBuyerChat && hasKeys(selectBuyerChat)) {
+      <div
+        class="bg-white p-3 border-top d-flex align-items-center justify-content-between"
+      >
         <input
           type="text"
           class="form-control me-2"
-          [(ngModel)]="messageText"
+          [(ngModel)]="content"
           (keydown)="onEnterPress($event)"
           placeholder="Type a message..."
         />
-        <button class="btn btn-primary me-2" (click)="sendMessage()">
+        <button class="btn btn-warning-custom me-2" (click)="sendMessage()">
           <i class="fa fa-paper-plane"></i>
         </button>
 
-        <!-- Hidden file input for file upload -->
-        <input
-          type="file"
-          id="fileInput"
-          (change)="handleFileInput($event)"
-          hidden
-        />
-
-        <button class="btn btn-secondary" (click)="triggerFileUpload()">
-          <i class="fa fa-paperclip"></i>
-        </button>
+        <!-- File Upload -->
       </div>
+      }
     </div>
   </div>
 </div>
-
-<!-- Image Modal for enlarged image with Close Button -->
- @if (modalImage) {
-<div  class="image-modal">
-  <span class="close-modal" (click)="closeImageModal()">X</span>
-  <img [src]="modalImage" class="enlarged-image" alt="Enlarged Image" />
-</div>
-}

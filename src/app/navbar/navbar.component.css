@@ -2,7 +2,6 @@ body {
   font-family: Arial, sans-serif;
   background-color: #1e1e2d;
   color: white;
-  
 }
 
 .navbar {
@@ -14,6 +13,82 @@ body {
 .fa-bars {
   cursor: pointer;
   color: white;
+}
+
+.notificationsDiv {
+  position: relative;
+  z-index: 200;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 250px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  z-index: 200;
+}
+.nameProductNot{
+  width: 50%;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  padding-bottom: 10px;
+}
+
+.notification-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.notification-item img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.notification-count {
+  background-color: #00aabb;
+  color: white;
+  padding: 3px 7px;
+  border-radius: 50%;
+  font-size: 12px;
+}
+.spanQuantityNot {
+  color: red;
+}
+.notification-icon {
+  position: relative;
+}
+.countNotification {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: #21b7b7;
+  top: -12px;
+  left: 15px;
+  font-size: 10px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .sidebar {
@@ -101,7 +176,8 @@ body {
     flex-wrap: nowrap;
   }
 
-  .search-container, .notification-profile {
+  .search-container,
+  .notification-profile {
     flex-grow: 1;
     justify-content: space-between;
   }

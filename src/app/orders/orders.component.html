@@ -6,6 +6,7 @@
     <li class="nav-item">
       <a
         class="nav-link"
+        role="button"
         [class.active]="activeTab === 'pending'"
         (click)="selectTab('pending')"
         >Pending Orders</a
@@ -14,6 +15,7 @@
     <li class="nav-item">
       <a
         class="nav-link"
+        role="button"
         [class.active]="activeTab === 'shipped'"
         (click)="selectTab('shipped')"
         >Shipped Orders</a
@@ -31,47 +33,60 @@
           <th>Image</th>
           <th>Product</th>
           <th>Price</th>
+          <th>Color</th>
           <th>Quantity</th>
           <th>Customer</th>
+          <th>Shipping Address</th>
           <th>Actions</th>
+          <!-- <th>Workshop</th> -->
         </tr>
       </thead>
       <tbody>
-        @for (order of orders(); track $index) {
+        @for (order of pendingOrders; track $index) { @for(product of
+        order.products; track $index){
         <tr>
           <td>
-            <img [src]="order.imageUrl" alt="{{ order.product }}" width="50" />
+            <img
+              [src]="product.productId.images[0]"
+              alt="{{ product.productId.name }}"
+              width="50"
+            />
           </td>
-          <td>{{ order.product }}</td>
-          <td>{{ order.price | currency }}</td>
+          <td>{{ product.productId.name }}</td>
+          <td>{{ product.productId.price | currency }}</td>
+          <td>{{ product.color }}</td>
           <td class="quantity-controls">
-            <span class="quantity-value">{{ order.quantity }}</span>
+            <span class="quantity-value">{{ product.quantity }}</span>
           </td>
-          <td>{{ order.customerName }}</td>
+          <td>{{ order.userId.fullName }}</td>
+          <td>
+            <span>{{ order.userId.address }}</span
+            >, <span>{{ order.shippingAddress.city }}</span
+            >,<br />
+            <span>{{ order.shippingAddress.houseNumber }}</span
+            >,<br />
+            <span>{{ order.shippingAddress.apartment }}</span>
+          </td>
           <td>
             <!-- زر الشحن يظهر فقط في الطلبات غير المشحونة -->
             @if (!order.shipped) {
-            <button class="btn btn-success me-2" (click)="shipOrder(order.id)">
+            <button
+              class="btn btn-success me-2"
+              (click)="shipOrder(product._id, order._id, product.color)"
+            >
               <i class="fas fa-shipping-fast"></i> Ship Order
             </button>
-            }
-
-            <!-- زر الإرسال يظهر بعد الشحن -->
-            @if (order.shipped && !order.sent) {
-            <button class="btn btn-primary me-2" (click)="sendOrder(order.id)">
-              <i class="fas fa-paper-plane"></i> Send Order
-            </button>
-            }
-
-            <!-- زر حذف الطلب يظهر إذا لم يتم الإرسال -->
-            @if (!order.sent) {
-            <button class="btn btn-danger" (click)="deleteOrder(order.id)">
-              <i class="fas fa-trash"></i> Cancel Order
+            <button
+              class="btn btn-danger"
+              (click)="cancelOrder(product._id, order._id, product.color,modalContent)"
+            >
+              <i class="fas fa-trash"></i> Canecl Order
             </button>
             }
           </td>
+          <!-- <td>{{product.productId["workshop_id"]}}</td> -->
         </tr>
-        }
+        } }
       </tbody>
     </table>
   </div>
@@ -87,32 +102,82 @@
           <th>Image</th>
           <th>Product</th>
           <th>Price</th>
+          <th>Color</th>
           <th>Quantity</th>
           <th>Customer</th>
-          <th>Order Date</th>
+          <th>Shipping Address</th>
+          <!-- <th>Order Date</th> -->
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        @for (order of shippedOrders; track $index) {
+        @for (order of shippedOrders; track $index) { @for(product of
+        order.products; track $index){
         <tr>
           <td>
-            <img [src]="order.imageUrl" alt="{{ order.product }}" width="50" />
+            <img
+              [src]="product.productId.images[0]"
+              alt="{{ product.productId.name }}"
+              width="50"
+            />
           </td>
-          <td>{{ order.product }}</td>
-          <td>{{ order.price | currency }}</td>
-          <td>{{ order.quantity }}</td>
-          <td>{{ order.customerName }}</td>
-          <td>{{ order.orderDate | date : "short" }}</td>
+          <td>{{ product.productId.name }}</td>
+          <td>{{ product.productId.price | currency }}</td>
+          <td>{{ product.color }}</td>
+          <td class="quantity-controls">
+            <span class="quantity-value">{{ product.quantity }}</span>
+          </td>
+          <td>{{ order.userId.fullName }}</td>
           <td>
-            <button class="btn btn-danger" (click)="cancelOrder(order.id)">
+            <span>{{ order.userId.address }}</span
+            >, <span>{{ order.shippingAddress.city }}</span
+            >,<br />
+            <span>{{ order.shippingAddress.houseNumber }}</span
+            >,<br />
+            <span>{{ order.shippingAddress.apartment }}</span>
+          </td>
+          <!-- <td>{{ order.orderDate | date : "short" }}</td> -->
+          <td>
+            <button
+              class="btn btn-danger"
+              (click)="
+                cancelOrder(product._id, order._id, product.color, modalContent)
+              "
+            >
               <i class="fas fa-times"></i> Cancel Order
             </button>
           </td>
         </tr>
-        }
+        }}
       </tbody>
     </table>
   </div>
   }
+  <div class="">
+    <!-- Modal content -->
+    <ng-template #modalContent let-modal>
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Cancellation</h5>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to cancel the order?</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="modal.dismiss('Close click')"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="modal.close('confirm')"
+        >
+          Confirm
+        </button>
+      </div>
+    </ng-template>
+  </div>
 </div>
