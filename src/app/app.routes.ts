@@ -30,17 +30,13 @@ export const routes: Routes = [
       },
       {
         path: 'profile',
-        component: ProfileComponent,
-        canActivate: [AuthGuard],
-      },
-      { path: 'chat', component: ChatComponent, canActivate: [AuthGuard] },
-      {
-        path: 'workShopProfile',
         component: WorkshopProfileComponent,
         canActivate: [AuthGuard],
       },
+      { path: 'chat', component: ChatComponent, canActivate: [AuthGuard] },
+
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: '**', component: PagenotfoundComponent },
     ],
   },
-  { path: '**', component: PagenotfoundComponent },
 ];
